@@ -166,3 +166,85 @@ var triviaList = [
 //         console.log(element);
 //     });
 // }
+
+const GAMEQUESTIONS = 10;
+
+// when start the game the questions are choosen and the first question becomes visible
+
+// object literal notation
+var game = {
+    questions: new Array(GAMEQUESTIONS),
+    currentQuestion: 0,
+
+    start: function() {
+        // initialize the game
+        var randomNumber = 0;
+        var questionObj = {};
+
+        // load up the questions to be used for the game
+        for (i=0; i < this.questions.length; i++) {
+            randomNumber = Math.floor(Math.random() * triviaList.length);            // random number between 0 and 30
+            console.log(randomNumber);
+            questionObj = triviaList[randomNumber];
+
+            console.log(questionObj);
+            this.questions[i] = questionObj;;
+        };
+
+    },
+
+    nextQuestion: function() {
+        this.currentQuestion++;
+    },
+
+    getQuestion: function() {
+        return this.questions[this.currentQuestion];
+    }
+};
+
+
+$(document).ready (function() {
+    console.log("ready");
+
+    $("#btn-start").on("click", function() {
+        console.log("start button clicked.");
+
+        // initialize the game
+
+        // hide the start button
+        $("#btn-start").addClass("d-none");
+        //$("#card-question").removeClass("d-none");
+
+        // show the question card with the first question
+        game.start();
+        var q = game.getQuestion();
+
+        // set the question data in the card
+        $("#question-nbr").text(game.currentQuestion + 1);
+        $("#question").text(q.question);
+
+        // append each of the responses to the choices id element       TOD add to the DOM correctly
+        // $("#choices").append(`<div id='RadioDiv${game.currentQuestion + 1}' class="form-radio form-radio-inline">`);
+        // $("#choices").append(`<input class='form-radio-input' type='radio' id='Radio${game.currentQuestion + 1}' name='choice' value='option${game.currentQuestion + 1}'>`);
+        // $("#choices").append(`<label class='form-radio-label' for='inlineRadio${game.currentQuestion + 1}'>${q.choices[0]}</label>`);
+        // $("#choices").append(`</div>`);
+
+        $("#answer").text(q.answer);
+
+        // show the card
+        $("#card-question").removeClass("d-none");
+    });
+
+    $("#btn-submit").on("click", function() {
+        console.log("submit button clicked.");
+
+        // if a response has not been selected, alert the user to select a choice and don't do anything else in here
+
+        // else 
+
+            //if we have not asked all of the question in the game, load the next question
+
+            // else end the game and give the results
+
+    });
+});
