@@ -4,7 +4,7 @@ Trivia Game
 ## Getting Started
  
  All references use a CDN.
- This is a JavaScript project that uses Bootstrap 4.1. 
+ This is a JavaScript/JQuery project that uses Bootstrap 4.1. 
 
 ### Prerequisites
 

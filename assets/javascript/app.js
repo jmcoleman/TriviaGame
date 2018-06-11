@@ -4,6 +4,7 @@
 //          http://www.businessinsider.com/12-trillion-photos-to-be-taken-in-2017-thanks-to-smartphones-chart-2017-8
 //          https://www.newgenapps.com/blog/iot-statistics-internet-of-things-future-research-data
 //          http://www.grabstats.com/stats/2049
+//          http://www.engineersireland.ie/EngineersIreland/media/SiteMedia/cpd/training/Seminars%20temp/Data%20Centres/1-Ray-Walshe-Datacentre-Growth.pdf
 //          Wikibon
 var triviaList = [
     {   id: 0, 
@@ -159,9 +160,9 @@ var triviaList = [
     },
 ];
 
-
-for (i=0; i < triviaList.length; i++) {
-    triviaList.forEach(element => {
-        console.log(element);
-    });
-}
+// check the loading of trivia questions
+// for (i=0; i < triviaList.length; i++) {
+//     triviaList.forEach(element => {
+//         console.log(element);
+//     });
+// }

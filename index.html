@@ -26,6 +26,96 @@
     <!-- use 120 seconds for timer -->
     <!-- he had 8 questions.  Will need a start page, question page and results page or do the advanced which gives the questions one at a time... -->
 
+    <div class="container">
+
+        <div class="jumbotron text-center my-5">
+
+            <!-- Game Heading -->
+            <h3 class="display-4 mb-5">Trivia for the Digital Economy</h3>
+
+            <!-- Question Content -->
+            <div class="card border-primary">
+
+                <!-- card header -->
+                <div class="card-header">
+                    Question <span id="question-nbr" class="badge badge-primary text-white p-2">1</span> of <span id="question-ttl" class="badge badge-primary text-white p-2">10</span>
+                </div>
+
+                <!-- card body -->
+                <div class="card-body">
+
+                    <!-- display the remaining time in the card title -->
+                    <div class="card-title">
+                        <p class="lead text-muted">
+                            Remaining time: <span id="remaining-time">60</span> seconds
+                        </p>
+                    </div>
+            
+                    <p class="card-text lead">
+                        Question: <span id="question">What is the answer to the question?</span>
+                    </p>
+
+                    <div class="card-text">
+                        <!-- OPTION A sandbox selections using flex -->
+                         <form id="choices" class="d-flex justify-content-around mb-3">
+                            <div class="form-radio form-radio-inline">
+                                <input class="form-radio-input" type="radio" id="inlineRadio1" value="option1">
+                                <label class="form-radio-label" for="inlineRadio1">Item 1</label>
+                            </div>
+                            <div class="form-radio form-radio-inline">
+                                <input class="form-radio-input" type="radio" id="inlineRadio2" value="option2">
+                                <label class="form-radio-label" for="inlineRadio2">Item 2</label>
+                            </div>
+                            <div class="form-radio form-radio-inline">
+                                <input class="form-radio-input" type="radio" id="inlineRadio3" value="option3">
+                                <label class="form-radio-label" for="inlineRadio3">Item 3</label>
+                            </div>
+                        </form>
+                              
+                        <!-- OPTION SIMPLE -->
+                        <form class="d-flex justify-content-around mb-3">
+                            <input type="radio" name="question" value="male" checked> Male<br>
+                            <input type="radio" name="question" value="female"> Female<br>
+                            <input type="radio" name="question" value="other"> Other
+                        </form>
+
+                        <!-- OPTION 1 selections using flex -->
+                        <div id="choices" class="d-flex justify-content-around mb-3">
+                            <!-- these will be dynamically generated based on the number of potential answers to the question -->
+                            <div class="">Item 1</div>
+                            <div class="">Item 2</div>
+                            <div class="">Item 3</div>
+                        </div>
+                        <!-- OPTION 2 selections next to each other -->
+                        <ul id="choices1" class="list-inline mb-3">
+                            <!-- these will be dynamically generated based on the number of potential answers to the question -->
+                            <li class="list-inline-item">Item 1</li>
+                            <li class="list-inline-item">Item 2</li>
+                            <li class="list-inline-item">Item 3</li>
+                        </ul>
+                        <!-- OPTION 3 selections one over the other -->
+                        <ul id="choices2" class="list-group mb-3">
+                            <!-- these will be dynamically generated based on the number of potential answers to the question -->
+                            <li class="list-group-item">Item 1</li>
+                            <li class="list-group-item">Item 2</li>
+                            <li class="list-group-item">Item 3</li>
+                        </ul>
+                    </div>
+
+                    <p class="card-text lead">
+                        Answer: <span id="answer">The answer is Item 1.</span>
+                    </p>
+
+                    <a id="btn-submit" href="#" class="btn btn-primary btn-lg w-25 mt-4">Submit</a>
+                </div>
+            </div>
+
+            <!-- Start game buttons -->
+            <a id="btn-start" href="#" class="btn btn-primary btn-lg w-25 mt-4 d-none">Start</a>
+        </div>
+
+    </div>
+
     <!-- Bootstrap 4.1 -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
