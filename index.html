@@ -56,51 +56,55 @@
                     </p>
 
                     <div class="card-text">
-                        <!-- OPTION A sandbox selections using flex -->
+                        <!-- LAYOUT 1 with horizontal selections -->
                          <form id="choices" class="d-flex justify-content-around mb-3">
                             <div class="form-radio form-radio-inline">
-                                <input class="form-radio-input" type="radio" id="inlineRadio1" value="option1">
+                                <input class="form-radio-input" type="radio" id="Radio1" name="choice" value="option1">
                                 <label class="form-radio-label" for="inlineRadio1">Item 1</label>
                             </div>
                             <div class="form-radio form-radio-inline">
-                                <input class="form-radio-input" type="radio" id="inlineRadio2" value="option2">
+                                <input class="form-radio-input" type="radio" id="Radio2" name="choice" value="option2">
                                 <label class="form-radio-label" for="inlineRadio2">Item 2</label>
                             </div>
                             <div class="form-radio form-radio-inline">
-                                <input class="form-radio-input" type="radio" id="inlineRadio3" value="option3">
+                                <input class="form-radio-input" type="radio" id="Radio3" name="choice" value="option3">
                                 <label class="form-radio-label" for="inlineRadio3">Item 3</label>
                             </div>
                         </form>
                               
-                        <!-- OPTION SIMPLE -->
-                        <form class="d-flex justify-content-around mb-3">
-                            <input type="radio" name="question" value="male" checked> Male<br>
-                            <input type="radio" name="question" value="female"> Female<br>
-                            <input type="radio" name="question" value="other"> Other
+                        <!-- LAYOUT 2 with vertical selections -->
+                        <form id="choices-vertical" class="mb-3">
+                            <div class="form-radio">
+                                <input class="form-radio-input" type="radio" id="Radio1" name="choice" value="option1">
+                                <label class="form-radio-label" for="Radio1">Item 1</label>
+                            </div>
+                            <div class="form-radio">
+                                <input class="form-radio-input" type="radio" id="Radio2" name="choice" value="option2">
+                                <label class="form-radio-label" for="Radio2">Item 2</label>
+                            </div>
+                            <div class="form-radio">
+                                <input class="form-radio-input" type="radio" id="Radio3" name="choice" value="option3">
+                                <label class="form-radio-label" for="Radio3">Item 3</label>
+                            </div>
                         </form>
 
-                        <!-- OPTION 1 selections using flex -->
-                        <div id="choices" class="d-flex justify-content-around mb-3">
-                            <!-- these will be dynamically generated based on the number of potential answers to the question -->
-                            <div class="">Item 1</div>
-                            <div class="">Item 2</div>
-                            <div class="">Item 3</div>
-                        </div>
-                        <!-- OPTION 2 selections next to each other -->
-                        <ul id="choices1" class="list-inline mb-3">
-                            <!-- these will be dynamically generated based on the number of potential answers to the question -->
-                            <li class="list-inline-item">Item 1</li>
-                            <li class="list-inline-item">Item 2</li>
-                            <li class="list-inline-item">Item 3</li>
-                        </ul>
-                        <!-- OPTION 3 selections one over the other -->
-                        <ul id="choices2" class="list-group mb-3">
-                            <!-- these will be dynamically generated based on the number of potential answers to the question -->
-                            <li class="list-group-item">Item 1</li>
-                            <li class="list-group-item">Item 2</li>
-                            <li class="list-group-item">Item 3</li>
-                        </ul>
-                    </div>
+                        <!-- LAYOUT 3 with vertical selections and borders -->
+                        <form id="choices-vertical-input-group" class="list-group mb-3">
+                            <div class="form-radio list-group-item">
+                                <input class="form-radio-input" type="radio" id="Radio1" name="choice" value="option1">
+                                <label class="form-radio-label" for="Radio1">Item 1</label>
+                            </div>
+                            <div class="form-radio list-group-item">
+                                <input class="form-radio-input" type="radio" id="Radio2" name="choice" value="option2">
+                                <label class="form-radio-label" for="Radio2">Item 2</label>
+                            </div>
+                            <div class="form-radio list-group-item">
+                                <input class="form-radio-input" type="radio" id="Radio3" name="choice" value="option3">
+                                <label class="form-radio-label" for="Radio3">Item 3</label>
+                            </div>
+                        </form>
+                        
+                     </div>
 
                     <p class="card-text lead">
                         Answer: <span id="answer">The answer is Item 1.</span>
