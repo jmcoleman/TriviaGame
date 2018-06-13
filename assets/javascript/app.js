@@ -244,6 +244,10 @@ $(document).ready (function() {
         $("#btn-start").addClass("d-none");                         // hide the start button
         game.start();                                               // start the game
 
+        //-----------------------
+        // NEW QUESTION
+        //-----------------------
+
         // set the time allowed 
         $("#remaining-time").text(TIMELIMIT/1000);                  // amount of time given to respond to the question
 
@@ -310,12 +314,47 @@ $(document).ready (function() {
         // go to next question after a few seconds
         /////////////////////////////////////////////
         setTimeout(function(){ 
-            alert("Hello"); 
+                console.log("Move to next question.");
+                game.nextQuestion();
+                $("#message-p").addClass("d-none");               // hide the answer
+                $("#btn-submit").removeClass("d-none");              // show the submit button
 
-            // game next questions
+                //-----------------------
+                // NEW QUESTION
+                //-----------------------
 
-            // show card
+                // set the time allowed 
+                $("#remaining-time").text(TIMELIMIT/1000);                  // amount of time given to respond to the question
 
+                ////////////////////////////////////////////
+                // set the question data in the card
+                ////////////////////////////////////////////
+                $("#question-nbr").text(game.currentQuestion + 1);          // show which question we are on
+                $("#question-ttl").text(GAMEQUESTIONS);                     // show the total number of questions
+
+                var q = game.getQuestion();
+                $("#question").text(q.question);                            // show the question
+
+                /////////////////////////////////////////////////////
+                // loop thru the choices and add the html for each
+                /////////////////////////////////////////////////////
+                var choicesDiv = $("#choices");
+                var j = 0;
+
+                choicesDiv.html("");                                        // clear out the test data on the html page
+
+                q.choices.forEach(function(choice) {
+                    choicesDiv.append(`<div id='RadioDiv${j}' class="form-radio form-radio-inline"></div>`);
+
+                    var newRadioDiv = $(`div[id='RadioDiv${j}`);
+                    newRadioDiv.append(` <input class='form-radio-input' type='radio' id='Radio${j}' name='choice' value='${q.choices[j]}'>`);
+                    newRadioDiv.append(` <label class='form-radio-label' for='inlineRadio${j}'>${q.choices[j]}</label>`);
+
+                    j++;
+                });
+
+                // show the card
+                $("#card-question").removeClass("d-none");
         }, 3000);
 
 
