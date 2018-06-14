@@ -37,12 +37,12 @@ var triviaList = [
         answer: "100 TB",
         answerMessage: "100 terabytes of data are uploaded daily to Facebook."
     },
-    {   id: 5, 
-        question: "The amount of data in the world today is equal to which of the below?", 
-        choices: ["Every person in the US tweeting three tweets per minute for 26,976 years.","Every person in the world having more than 215m high-resolution MRI scans a day.","More than 200bn HD movies – which would take a person 47m years to watch.","All of these"], 
-        answer: "All of these",
-        answerMessage: "The amount of data in the world today is equal to: Every person in the US tweeting three tweets per minute for 26,976 years. Every person in the world having more than 215m high-resolution MRI scans a day. More than 200bn HD movies – which would take a person 47m years to watch."
-    },
+    // {   id: 5, 
+    //     question: "The amount of data in the world today is equal to which of the below?", 
+    //     choices: ["Every person in the US tweeting three tweets per minute for 26,976 years.","Every person in the world having more than 215m high-resolution MRI scans a day.","More than 200bn HD movies – which would take a person 47m years to watch.","All of these"], 
+    //     answer: "All of these",
+    //     answerMessage: "The amount of data in the world today is equal to: Every person in the US tweeting three tweets per minute for 26,976 years. Every person in the world having more than 215m high-resolution MRI scans a day. More than 200bn HD movies – which would take a person 47m years to watch."
+    // },
     {   id: 6, 
         question: "How many messages do Facebook users send every minute?", 
         choices: ["20 million", "28.2 million", "31.25 million", "50 million"], 
@@ -67,12 +67,12 @@ var triviaList = [
         answer: "2.77 million",
         answerMessage: "Every minute Facebook users watch 2.77 million videos."
     },
-    {   id: 10, 
-        question: "What is a citizen data scientist?", 
-        choices: ["Statistician", "US citizen with an actuarial degree", "Non-statistician that does the work of a statistician", "None of these"], 
-        answer: "a non-statistician that does the work of a statistician",
-        answerMessage: "Citizen data scientists are non-statisticians who do the work of statisticians. The term was coined by Gartner, so here’s the IT advisory firm’s formal definition: “a person who creates or generates models that leverage predictive or prescriptive analytics, but whose primary job function is outside of the field of statistics and analytics.”"
-    },
+    // {   id: 10, 
+    //     question: "What is a citizen data scientist?", 
+    //     choices: ["Statistician", "US citizen with an actuarial degree", "Non-statistician that does the work of a statistician", "None of these"], 
+    //     answer: "a non-statistician that does the work of a statistician",
+    //     answerMessage: "Citizen data scientists are non-statisticians who do the work of statisticians. The term was coined by Gartner, so here’s the IT advisory firm’s formal definition: “a person who creates or generates models that leverage predictive or prescriptive analytics, but whose primary job function is outside of the field of statistics and analytics.”"
+    // },
     {   id: 11, 
         question: "By 2020, how much data is estimated to be created every second, for every person on earth?", 
         choices: ["1.3 MB", "1.7 MB", "10 MB", "12.5 MB"], 
@@ -204,6 +204,7 @@ const TIMELIMIT = 120000;       // Max time allowed to answer a question.  (expr
 var game = {
     questions: new Array(GAMEQUESTIONS),
     currentQuestion: 0,
+    answeredCorrectly: false,
 
     start: function() {
         // initialize the game
@@ -228,9 +229,87 @@ var game = {
 
     getQuestion: function() {
         return this.questions[this.currentQuestion];
+    },
+
+    getAnswerMessage: function() {
+        return this.questions[this.currentQuestion.answerMessage];
+    },
+
+    isAnswerCorrect: function(myAnswer) {
+        console.log("Answer is: " + this.getQuestion().answer);
+        var result = (myAnswer === this.getQuestion().answer) ? true : false;
+        this.currentQuestion.answeredCorrectly = result;
+        return result;
+    },
+
+    htmlShowQuestion: function() {
+        // set the time allowed 
+        $("#remaining-time").text(TIMELIMIT/1000);                  // amount of time given to respond to the question
+    
+        ////////////////////////////////////////////
+        // set the question data in the card
+        ////////////////////////////////////////////
+        $("#question-nbr").text(game.currentQuestion + 1);          // show which question we are on
+        $("#question-ttl").text(GAMEQUESTIONS);                     // show the total number of questions
+    
+        var q = game.getQuestion();
+        $("#question").text(q.question);                            // show the question
+    
+        /////////////////////////////////////////////////////
+        // loop thru the choices and add the html for each
+        /////////////////////////////////////////////////////
+        var choicesDiv = $("#choices");
+        var j = 0;
+    
+        choicesDiv.html("");                                        // clear out the test data on the html page
+    
+        q.choices.forEach(function(choice) {
+            choicesDiv.append(`<div id='RadioDiv${j}' class="form-radio form-radio-inline"></div>`);
+    
+            var newRadioDiv = $(`div[id='RadioDiv${j}`);
+            newRadioDiv.append(` <input class='form-radio-input' type='radio' id='Radio${j}' name='choice' value='${q.choices[j]}'>`);
+            newRadioDiv.append(` <label class='form-radio-label' for='inlineRadio${j}'>${q.choices[j]}</label>`);
+    
+            j++;
+        });
+    
+        // show the card
+        $("#card-question").removeClass("d-none");
+    },
+
+    htmlShowAnswer: function(isRight) {
+        var a = game.getQuestion();
+        var newImg;
+
+        console.log("In showAnswer: " + a.answerMessage);
+        $("#btn-submit").addClass("d-none");                 // hide the submit button
+        $("#message").text(a.answerMessage);                 // populate the answer
+
+        /////////////////////////////////
+        // Show Yes / No image or gif
+        /////////////////////////////////
+        // if (isRight) {
+        //     // show YES image
+        //     newImg = $("<img>").attr({"src":"https://media0.giphy.com/media/ap6wcjRyi8HoA/giphy.gif", "width":"150px", "height":"150px"});
+        // } else {
+        //     // show OOPS image
+        //     newImg = $("<img>").attr({"src":"https://media3.giphy.com/media/3o6vXR8idD7v8ulzFe/giphy.gif", "width":"100px", "height":"100px"});
+        // }
+
+        var e = $("#message-p");
+        e.prepend(newImg);
+
+        $("#message-p").removeClass("d-none");               // show the answer
+    },
+
+    htmlClearAnswer: function() {
+        $("img").remove();
+    },
+
+    gameOver: function() {
+        alert("Game Over");         // TODO give results on page
     }
 };
-
 
 $(document).ready (function() {
     console.log("ready");
@@ -241,126 +320,60 @@ $(document).ready (function() {
     $("#btn-start").on("click", function() {
         console.log("start button clicked.");
         
-        $("#btn-start").addClass("d-none");                         // hide the start button
-        game.start();                                               // start the game
+        $("#btn-start").addClass("d-none");             // hide the start button
+        game.start();                                   // start the game
+        game.htmlShowQuestion();                            // show question
 
-        //-----------------------
-        // NEW QUESTION
-        //-----------------------
-
-        // set the time allowed 
-        $("#remaining-time").text(TIMELIMIT/1000);                  // amount of time given to respond to the question
-
-        ////////////////////////////////////////////
-        // set the question data in the card
-        ////////////////////////////////////////////
-        $("#question-nbr").text(game.currentQuestion + 1);          // show which question we are on
-        $("#question-ttl").text(GAMEQUESTIONS);                     // show the total number of questions
-
-        var q = game.getQuestion();
-        $("#question").text(q.question);                            // show the question
-
-        /////////////////////////////////////////////////////
-        // loop thru the choices and add the html for each
-        /////////////////////////////////////////////////////
-        var choicesDiv = $("#choices");
-        var j = 0;
-
-        choicesDiv.html("");                                        // clear out the test data on the html page
-
-        q.choices.forEach(function(choice) {
-            choicesDiv.append(`<div id='RadioDiv${j}' class="form-radio form-radio-inline"></div>`);
-
-            var newRadioDiv = $(`div[id='RadioDiv${j}`);
-            newRadioDiv.append(` <input class='form-radio-input' type='radio' id='Radio${j}' name='choice' value='${q.choices[j]}'>`);
-            newRadioDiv.append(` <label class='form-radio-label' for='inlineRadio${j}'>${q.choices[j]}</label>`);
-
-            j++;
-        });
-
-        // show the card
-        $("#card-question").removeClass("d-none");
     });
 
+    ///////////////////////////////////////////
+    // user clicks to submit question
+    ///////////////////////////////////////////
     $("#btn-submit").on("click", function() {
         console.log("submit button clicked.");
 
-        //apture the user response
+        // capture the user response
         var userAnswer = $("input[type='radio'][name='choice']:checked").val();
         
-        // make sure the user provided an answer
+        // check that the user provided an answer
         if (!userAnswer) {
             $("#message").text("You must choose a response before submitting!");            // populate the answer
             $("#message-p").removeClass("d-none");                                          // show the answer
             return;
         }
 
-        console.log(userAnswer);
-
-        // check if answer is correct and store         TODO
-        var q = game.getQuestion();
+        console.log("Submitted: " + userAnswer);
+        var result = game.isAnswerCorrect(userAnswer);
+        console.log("Result: " + result);
 
         //q.timeElapsed = timeElapsed ? true: false;            TODO
-        q.answeredCorrectly = (userAnswer === q.answer) ? true : false;
 
         /////////////////////////////////////////////// 
         // show the answer
         /////////////////////////////////////////////// 
-        $("#btn-submit").addClass("d-none");                 // hide the submit button
-        $("#message").text(q.answerMessage.toString());      // populate the answer
-        $("#message-p").removeClass("d-none");               // show the answer
+        game.htmlShowAnswer(result);
 
         /////////////////////////////////////////////
         // go to next question after a few seconds
         /////////////////////////////////////////////
-        setTimeout(function(){ 
+       var questionTimer = setTimeout(function() { 
+            if (game.currentQuestion + 1 < game.questions.length) {
                 console.log("Move to next question.");
+                console.log("current question: "+ game.currentQuestion);
+                console.log("game question length: " + game.questions.length);
+
+                game.htmlClearAnswer();
                 game.nextQuestion();
                 $("#message-p").addClass("d-none");               // hide the answer
-                $("#btn-submit").removeClass("d-none");              // show the submit button
+                $("#btn-submit").removeClass("d-none");           // show the submit button
 
-                //-----------------------
-                // NEW QUESTION
-                //-----------------------
-
-                // set the time allowed 
-                $("#remaining-time").text(TIMELIMIT/1000);                  // amount of time given to respond to the question
-
-                ////////////////////////////////////////////
-                // set the question data in the card
-                ////////////////////////////////////////////
-                $("#question-nbr").text(game.currentQuestion + 1);          // show which question we are on
-                $("#question-ttl").text(GAMEQUESTIONS);                     // show the total number of questions
-
-                var q = game.getQuestion();
-                $("#question").text(q.question);                            // show the question
-
-                /////////////////////////////////////////////////////
-                // loop thru the choices and add the html for each
-                /////////////////////////////////////////////////////
-                var choicesDiv = $("#choices");
-                var j = 0;
-
-                choicesDiv.html("");                                        // clear out the test data on the html page
-
-                q.choices.forEach(function(choice) {
-                    choicesDiv.append(`<div id='RadioDiv${j}' class="form-radio form-radio-inline"></div>`);
-
-                    var newRadioDiv = $(`div[id='RadioDiv${j}`);
-                    newRadioDiv.append(` <input class='form-radio-input' type='radio' id='Radio${j}' name='choice' value='${q.choices[j]}'>`);
-                    newRadioDiv.append(` <label class='form-radio-label' for='inlineRadio${j}'>${q.choices[j]}</label>`);
-
-                    j++;
-                });
-
-                // show the card
-                $("#card-question").removeClass("d-none");
+                game.htmlShowQuestion();
+            } else {
+                clearTimeout(questionTimer);
+                game.gameOver();
+            }
         }, 3000);
 
-
-            //if we have not asked all of the question in the game, load the next question  TODO
-
-            // else end the game and give the results  TODO
 
     });
 });
