@@ -37,12 +37,12 @@ var triviaList = [
         answer: "100 TB",
         answerMessage: "100 terabytes of data are uploaded daily to Facebook."
     },
-    // {   id: 5, 
-    //     question: "The amount of data in the world today is equal to which of the below?", 
-    //     choices: ["Every person in the US tweeting three tweets per minute for 26,976 years.","Every person in the world having more than 215m high-resolution MRI scans a day.","More than 200bn HD movies – which would take a person 47m years to watch.","All of these"], 
-    //     answer: "All of these",
-    //     answerMessage: "The amount of data in the world today is equal to: Every person in the US tweeting three tweets per minute for 26,976 years. Every person in the world having more than 215m high-resolution MRI scans a day. More than 200bn HD movies – which would take a person 47m years to watch."
-    // },
+    {   id: 5, 
+        question: "The amount of data in the world today is equal to which of the below?", 
+        choices: ["Every person in US tweeting 3 tweets per minute for 26,976 years.","Every person in the world having more than 215m high-resolution MRI scans a day.","More than 200bn HD movies – which would take a person 47m years to watch.","All of these"], 
+        answer: "All of these",
+        answerMessage: "The amount of data in the world today is equal to: Every person in the US tweeting three tweets per minute for 26,976 years. Every person in the world having more than 215m high-resolution MRI scans a day. More than 200bn HD movies – which would take a person 47m years to watch."
+    },
     {   id: 6, 
         question: "How many messages do Facebook users send every minute?", 
         choices: ["20 million", "28.2 million", "31.25 million", "50 million"], 
@@ -67,12 +67,12 @@ var triviaList = [
         answer: "2.77 million",
         answerMessage: "Every minute Facebook users watch 2.77 million videos."
     },
-    // {   id: 10, 
-    //     question: "What is a citizen data scientist?", 
-    //     choices: ["Statistician", "US citizen with an actuarial degree", "Non-statistician that does the work of a statistician", "None of these"], 
-    //     answer: "a non-statistician that does the work of a statistician",
-    //     answerMessage: "Citizen data scientists are non-statisticians who do the work of statisticians. The term was coined by Gartner, so here’s the IT advisory firm’s formal definition: “a person who creates or generates models that leverage predictive or prescriptive analytics, but whose primary job function is outside of the field of statistics and analytics.”"
-    // },
+    {   id: 10, 
+        question: "What is a citizen data scientist?", 
+        choices: ["Statistician", "US citizen with an actuarial degree", "Non-statistician that does the work of a statistician", "None of these"], 
+        answer: "a non-statistician that does the work of a statistician",
+        answerMessage: "Citizen data scientists are non-statisticians who do the work of statisticians. The term was coined by Gartner, so here’s the IT advisory firm’s formal definition: “a person who creates or generates models that leverage predictive or prescriptive analytics, but whose primary job function is outside of the field of statistics and analytics.”"
+    },
     {   id: 11, 
         question: "By 2020, how much data is estimated to be created every second, for every person on earth?", 
         choices: ["1.3 MB", "1.7 MB", "10 MB", "12.5 MB"], 
@@ -205,6 +205,7 @@ var game = {
     questions: new Array(GAMEQUESTIONS),
     currentQuestion: 0,
     answeredCorrectly: false,
+    answerTimer: 0,
 
     start: function() {
         // initialize the game
@@ -223,8 +224,15 @@ var game = {
 
     },
 
+    reset: function() {
+        questions = new Array(GAMEQUESTIONS);
+        currentQuestion = 0;
+        this.answeredCorrectly = false;
+    },
+
     nextQuestion: function() {
         this.currentQuestion++;
+        clearTimeout(answerTimer);
     },
 
     getQuestion: function() {
@@ -332,7 +340,7 @@ var game = {
                 /////////////////////////////////////////////
                 // go to next question after a few seconds
                 /////////////////////////////////////////////
-                var answerTimer = setTimeout(function() { 
+                answerTimer = setTimeout(function() { 
                     if (game.currentQuestion + 1 < game.questions.length) {
                         console.log("Move to next question.");
                         console.log("current question: "+ game.currentQuestion);
@@ -356,6 +364,10 @@ var game = {
 
     gameOver: function() {
         alert("Game Over");         // TODO give results on page
+        // show new content on page with stats
+
+        // show it x seconds and start a new game
+        var gameoverTimer = setTimeout(this.reset,3000);
     }
 };
 
@@ -424,4 +436,5 @@ $(document).ready (function() {
 
 
     });
+
 });
