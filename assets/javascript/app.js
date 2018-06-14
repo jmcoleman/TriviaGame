@@ -198,7 +198,7 @@ var triviaList = [
 // }
 
 const GAMEQUESTIONS = 3;        // Number of questions to ask in a game.
-const TIMELIMIT = 120000;       // Max time allowed to answer a question.  (expressed in milliseconds... equates to 120 seconds)
+const TIMELIMIT = 5000;       // Max time allowed to answer a question.  (expressed in milliseconds... equates to 120 seconds)
 
 // object literal notation
 var game = {
@@ -243,9 +243,7 @@ var game = {
     },
 
     htmlShowQuestion: function() {
-        // set the time allowed 
-        $("#remaining-time").text(TIMELIMIT/1000);                  // amount of time given to respond to the question
-    
+
         ////////////////////////////////////////////
         // set the question data in the card
         ////////////////////////////////////////////
@@ -275,6 +273,8 @@ var game = {
     
         // show the card
         $("#card-question").removeClass("d-none");
+
+        this.startQuestionTimer();
     },
 
     htmlShowAnswer: function(isRight) {
@@ -304,6 +304,54 @@ var game = {
 
     htmlClearAnswer: function() {
         $("img").remove();
+    },
+
+    startQuestionTimer: function() {
+
+        ////////////////////////
+        // Question TIMER
+        ////////////////////////
+        
+        // set the time allowed 
+        $("#remaining-time").text(TIMELIMIT/1000);                  // amount of time given to respond to the question
+
+        // countdown
+        var timeleft = TIMELIMIT/1000;
+        var questionTimer = window.setInterval(function() {
+            timeleft--;
+            $("#remaining-time").text(timeleft);
+
+            if (timeleft <=0) {
+                window.clearInterval(questionTimer);
+                //alert("Out of Time!!!");                    //TODO chg to message
+                /////////////////////////////////////////////// 
+                // show the answer
+                /////////////////////////////////////////////// 
+                game.htmlShowAnswer(false);
+
+                /////////////////////////////////////////////
+                // go to next question after a few seconds
+                /////////////////////////////////////////////
+                var answerTimer = setTimeout(function() { 
+                    if (game.currentQuestion + 1 < game.questions.length) {
+                        console.log("Move to next question.");
+                        console.log("current question: "+ game.currentQuestion);
+                        console.log("game question length: " + game.questions.length);
+
+                        game.htmlClearAnswer();
+                        game.nextQuestion();
+                        $("#message-p").addClass("d-none");               // hide the answer
+                        $("#btn-submit").removeClass("d-none");           // show the submit button
+
+                        game.htmlShowQuestion();
+                    } else {
+                        clearTimeout(answerTimer);
+                        game.gameOver();
+                    }
+                }, 3000);
+            }
+        }, 1000);
+
     },
 
     gameOver: function() {
@@ -356,7 +404,7 @@ $(document).ready (function() {
         /////////////////////////////////////////////
         // go to next question after a few seconds
         /////////////////////////////////////////////
-       var questionTimer = setTimeout(function() { 
+       var answerTimer = setTimeout(function() { 
             if (game.currentQuestion + 1 < game.questions.length) {
                 console.log("Move to next question.");
                 console.log("current question: "+ game.currentQuestion);
@@ -369,7 +417,7 @@ $(document).ready (function() {
 
                 game.htmlShowQuestion();
             } else {
-                clearTimeout(questionTimer);
+                clearTimeout(answerTimer);
                 game.gameOver();
             }
         }, 3000);
