@@ -217,21 +217,27 @@ var game = {
         // initialize the game
         var randomNumber = 0;
         var questionObj = {};
+        var questionIndexArray = [];
 
         self = this;
 
         // load up the questions to be used for the game
         for (i=0; i < NUMBER_OF_GAME_QUESTIONS; i++) {
-            randomNumber = Math.floor(Math.random() * triviaList.length);            // random number between 0 and 30
+
+            do {
+                randomNumber = Math.floor(Math.random() * triviaList.length);            // random number between 0 and 29 (30 options)
+            }
+            while (questionIndexArray.indexOf(randomNumber) !== -1);
+
+            questionIndexArray.push(randomNumber);
 
             // get the question and default the question properties we'll use
             questionObj = triviaList[randomNumber];
             questionObj.timeExpired = null;
             questionObj.answeredCorrectly = null;
-
-            //console.log(questionObj);
             self.questions.push(questionObj);
         };
+
         console.log(self.questions);
     },
 
