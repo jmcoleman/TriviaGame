@@ -18,6 +18,7 @@
 
     <!-- fonts -->
     <!--link href="https://fonts.googleapis.com/css?family=Lobster+Two|PT+Sans" rel="stylesheet"-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 
     <!-- title and favicon (TODO add favicon and theme)-->
     <title>Trivia Game</title>
@@ -31,13 +32,13 @@
         <div class="jumbotron text-center my-5">
 
             <!-- Game Heading -->
-            <h3 class="display-4 mb-5">Trivia for the Digital Economy</h3>
+            <h1 class="display-5 mb-5">Trivia for the Digital Economy</h1>
 
             <!-- Question Content -->
             <div id="card-question" class="card border-primary d-none">
 
                 <!-- card header -->
-                <div class="card-header text-muted">
+                <div class="card-header text-muted bg-light">
                     Question <span id="question-nbr" class="badge badge-primary text-white p-2">1</span> of <span id="question-ttl" class="badge badge-primary text-white p-2">10</span>
                 </div>
 
@@ -51,7 +52,7 @@
                         </h5>
                     </div>
             
-                    <h4 class="card-text text-muted my-4">
+                    <h4 class="card-text my-4">
                         <span id="question">What is the answer to the question?</span>
                     </h4>
 
@@ -104,11 +105,17 @@
                             </div>
                         </form-->
                         
-                     </div>
-
-                    <p id="message-p" class="card-text lead d-none">
-                        <span id="message">The answer is Item 1.</span>
-                    </p>
+                    </div>
+                    
+                    <div id="message-p" class="card-text lead mb-2 d-none">
+                        <div class="text-center display-4 mb-3">
+                                <i class="fas fa-check-circle fa-lg mr-3 text-success" aria-hidden="true"></i>Correct!</div>
+                        <div class="text-center display-4 mb-3">
+                            <i class="fas fa-times-circle fa-lg mr-3 text-danger" aria-hidden="true"></i>Um, no.</div>
+                        <div class="text-center display-4 mb-3">
+                            <i class="fas fa-hourglass-end fa-lg mr-3 text-warning" aria-hidden="true"></i>Time's Up!</div>
+                        <!--span id="message" class="display-5 lead text-muted">The answer is Item 1.</span-->
+                    </div>
 
                     <!-- Submit answer button -->
                     <button id="btn-submit" type="button" class="btn btn-primary btn-lg w-25 mt-4">Submit</button>
@@ -116,7 +123,8 @@
             </div>
 
             <!-- Start game button -->
-            <button id="btn-start" type="button" class="btn btn-primary btn-lg w-25 mt-4">Start</button>
+            <button id="btn-start" type="button" class="btn btn-primary btn-lg w-25 mt-4">Let's Go</button>
+
         </div>
 
     </div>

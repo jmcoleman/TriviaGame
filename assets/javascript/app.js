@@ -70,7 +70,7 @@ var triviaList = [
     {   id: 10, 
         question: "What is a citizen data scientist?", 
         choices: ["Statistician", "US citizen with an actuarial degree", "Non-statistician that does the work of a statistician", "None of these"], 
-        answer: "a non-statistician that does the work of a statistician",
+        answer: "Non-statistician that does the work of a statistician",
         answerMessage: "Citizen data scientists are non-statisticians who do the work of statisticians. The term was coined by Gartner, so here’s the IT advisory firm’s formal definition: “a person who creates or generates models that leverage predictive or prescriptive analytics, but whose primary job function is outside of the field of statistics and analytics.”"
     },
     {   id: 11, 
@@ -197,56 +197,68 @@ var triviaList = [
 //     });
 // }
 
-const GAMEQUESTIONS = 3;        // Number of questions to ask in a game.
-const TIMELIMIT = 5000;       // Max time allowed to answer a question.  (expressed in milliseconds... equates to 120 seconds)
+const NUMBER_OF_GAME_QUESTIONS = 5;                // Number of questions to ask in a game.
+const RESPONSE_TIME_LIMIT = 30000;      // Max ime allowed to answer a question.  (expressed in milliseconds... equates to 120 seconds)
+const ANSWER_PREVIEW_TIME = 5000;       // Time of interval to show the answer
+
+const ANSWER_WRONG_FLAG = 0;    // answer is wrong state value
+const ANSWER_RIGHT_FLAG = 1;    // answer is right state value
+const TIME_EXPIRED_FLAG = 2;    // indicaes time has expired
 
 // object literal notation
 var game = {
-    questions: new Array(GAMEQUESTIONS),
+    questions: [],
     currentQuestion: 0,
     answeredCorrectly: false,
-    answerTimer: 0,
+    answerSubmitted: false,
+    timeleft: 0,
+    self: {},
 
     start: function() {
         // initialize the game
         var randomNumber = 0;
         var questionObj = {};
 
+        self = this;
+        
         // load up the questions to be used for the game
-        for (i=0; i < this.questions.length; i++) {
+        for (i=0; i < NUMBER_OF_GAME_QUESTIONS; i++) {
             randomNumber = Math.floor(Math.random() * triviaList.length);            // random number between 0 and 30
-            console.log(randomNumber);
+            //console.log(randomNumber);
             questionObj = triviaList[randomNumber];
 
-            console.log(questionObj);
-            this.questions[i] = questionObj;;
+            //console.log(questionObj);
+            self.questions.push(questionObj);
         };
-
+        console.log(self.questions);
     },
 
-    reset: function() {
-        questions = new Array(GAMEQUESTIONS);
-        currentQuestion = 0;
-        this.answeredCorrectly = false;
+    resetGame: function() {
+        self.questions = [];
+        self.currentQuestion = 0;
+        self.answeredCorrectly = false;
+        self.answerSubmitted = false;
+        self.timeleft = 0;
     },
 
     nextQuestion: function() {
-        this.currentQuestion++;
-        clearTimeout(answerTimer);
+        self.currentQuestion++;
+        self.answerSubmitted = false;
     },
 
     getQuestion: function() {
-        return this.questions[this.currentQuestion];
-    },
-
-    getAnswerMessage: function() {
-        return this.questions[this.currentQuestion.answerMessage];
+        return self.questions[self.currentQuestion];
     },
 
     isAnswerCorrect: function(myAnswer) {
-        console.log("Answer is: " + this.getQuestion().answer);
-        var result = (myAnswer === this.getQuestion().answer) ? true : false;
-        this.currentQuestion.answeredCorrectly = result;
+        var ques = self.getQuestion();
+
+        console.log("Answer is: " + ques.answer);
+
+        var result = (myAnswer === ques.answer) ? true : false;
+        ques.answeredCorrectly = result;
+        self.answerSubmitted = true;
+
         return result;
     },
 
@@ -256,9 +268,9 @@ var game = {
         // set the question data in the card
         ////////////////////////////////////////////
         $("#question-nbr").text(game.currentQuestion + 1);          // show which question we are on
-        $("#question-ttl").text(GAMEQUESTIONS);                     // show the total number of questions
+        $("#question-ttl").text(NUMBER_OF_GAME_QUESTIONS);                     // show the total number of questions
     
-        var q = game.getQuestion();
+        var q = self.getQuestion();
         $("#question").text(q.question);                            // show the question
     
         /////////////////////////////////////////////////////
@@ -273,106 +285,95 @@ var game = {
             choicesDiv.append(`<div id='RadioDiv${j}' class="form-radio form-radio-inline"></div>`);
     
             var newRadioDiv = $(`div[id='RadioDiv${j}`);
-            newRadioDiv.append(` <input class='form-radio-input' type='radio' id='Radio${j}' name='choice' value='${q.choices[j]}'>`);
-            newRadioDiv.append(` <label class='form-radio-label' for='inlineRadio${j}'>${q.choices[j]}</label>`);
+            newRadioDiv.append(`<input class='form-radio-input' type='radio' id='Radio${j}' name='choice' value='${q.choices[j]}'>`);
+            newRadioDiv.append(`<label class='form-radio-label' for='inlineRadio${j}'>${q.choices[j]}</label>`);
     
             j++;
         });
     
         // show the card
         $("#card-question").removeClass("d-none");
-
-        this.startQuestionTimer();
-    },
-
-    htmlShowAnswer: function(isRight) {
-        var a = game.getQuestion();
-        var newImg;
-
-        console.log("In showAnswer: " + a.answerMessage);
-        $("#btn-submit").addClass("d-none");                 // hide the submit button
-        $("#message").text(a.answerMessage);                 // populate the answer
-
-        /////////////////////////////////
-        // Show Yes / No image or gif
-        /////////////////////////////////
-        // if (isRight) {
-        //     // show YES image
-        //     newImg = $("<img>").attr({"src":"https://media0.giphy.com/media/ap6wcjRyi8HoA/giphy.gif", "width":"150px", "height":"150px"});
-        // } else {
-        //     // show OOPS image
-        //     newImg = $("<img>").attr({"src":"https://media3.giphy.com/media/3o6vXR8idD7v8ulzFe/giphy.gif", "width":"100px", "height":"100px"});
-        // }
-
-        var e = $("#message-p");
-        e.prepend(newImg);
-
-        $("#message-p").removeClass("d-none");               // show the answer
     },
 
     htmlClearAnswer: function() {
-        $("img").remove();
-    },
-
-    startQuestionTimer: function() {
-
-        ////////////////////////
-        // Question TIMER
-        ////////////////////////
-        
-        // set the time allowed 
-        $("#remaining-time").text(TIMELIMIT/1000);                  // amount of time given to respond to the question
-
-        // countdown
-        var timeleft = TIMELIMIT/1000;
-        var questionTimer = window.setInterval(function() {
-            timeleft--;
-            $("#remaining-time").text(timeleft);
-
-            if (timeleft <=0) {
-                window.clearInterval(questionTimer);
-                //alert("Out of Time!!!");                    //TODO chg to message
-                /////////////////////////////////////////////// 
-                // show the answer
-                /////////////////////////////////////////////// 
-                game.htmlShowAnswer(false);
-
-                /////////////////////////////////////////////
-                // go to next question after a few seconds
-                /////////////////////////////////////////////
-                answerTimer = setTimeout(function() { 
-                    if (game.currentQuestion + 1 < game.questions.length) {
-                        console.log("Move to next question.");
-                        console.log("current question: "+ game.currentQuestion);
-                        console.log("game question length: " + game.questions.length);
-
-                        game.htmlClearAnswer();
-                        game.nextQuestion();
-                        $("#message-p").addClass("d-none");               // hide the answer
-                        $("#btn-submit").removeClass("d-none");           // show the submit button
-
-                        game.htmlShowQuestion();
-                    } else {
-                        clearTimeout(answerTimer);
-                        game.gameOver();
-                    }
-                }, 3000);
-            }
-        }, 1000);
-
+        var answerMsg = $("#message-p");
+        answerMsg.empty(); 
     },
 
     gameOver: function() {
         alert("Game Over");         // TODO give results on page
         // show new content on page with stats
+    },
 
-        // show it x seconds and start a new game
-        var gameoverTimer = setTimeout(this.reset,3000);
-    }
+    htmlShowAnswer: function(answerState) {
+        var a = self.getQuestion();
+
+        console.log("showAnswer: " + a.answerMessage);
+
+        $("#btn-submit").addClass("d-none");                 // hide the submit button
+
+        /////////////////////////////////////////
+        // Show Correct, Incorrect, or Time Up
+        /////////////////////////////////////////
+        // <div class="text-center display-4 mb-3">
+        //     <i class="fas fa-check-circle fa-lg mr-3 text-success"></i>Correct!
+        // </div>
+        // <div class="text-center display-4 mb-3">
+        //     <i class="fas fa-times-circle fa-lg mr-3 text-danger"></i>Um, no.
+        // </div>
+        // <div class="text-center display-4 mb-3">
+        //     <i class="fas fa-hourglass-end fa-lg mr-3 text-warning"></i>Time's Up!
+        // </div>
+        // <span id="message" class="display-5 lead text-muted">The answer is Item 1.</span>
+
+        var horizElem = $("<hr>");
+        var answerElem = $("<div>");
+        var answerResponse = $("<i>");              // has whether the answer is right or wrong or time up
+        var spanAnswerDetails = $("<span>");        // has the answer details
+
+        answerElem.addClass("text-center my-2");
+        answerResponse.addClass("fas fa-lg mr-3 my-4");
+        horizElem.addClass("mb-3");
+
+        switch (answerState) {
+            case ANSWER_RIGHT_FLAG:
+                answerResponse.addClass("fa-check-circle text-success");
+                answerElem.text("Correct!");
+                break;
+            case ANSWER_WRONG_FLAG:
+                answerResponse.addClass("fa-times-circle text-danger");
+                answerElem.text("Nice try!");
+                break;
+            case TIME_EXPIRED_FLAG:
+                answerResponse.addClass("fa-hourglass-end text-warning");
+                answerElem.text("Time's Up!");
+                break;
+            default:
+                console.log("Error: Invalid answer state in logic.");
+        }
+        answerElem.prepend(answerResponse);
+
+        spanAnswerDetails.attr("id","message");
+        spanAnswerDetails.addClass("my-2");
+        spanAnswerDetails.text(a.answerMessage);
+
+        self.htmlClearAnswer();                             // clear the answer from the DOM before adding it back
+        
+        var e = $("#message-p");                            // find where we add it
+        e.append(horizElem);                                // add a separator
+        e.append(spanAnswerDetails);                        // add the text of the answer
+        e.append(answerElem);                               // add the answer image and feedback
+
+        $("#message-p").removeClass("d-none");              // show the answer
+
+    },
+
 };
 
+var userSelectionTimer;
+var answerTimer;
+
 $(document).ready (function() {
-    console.log("ready");
 
     ///////////////////////////////////////////
     // user clicks button to START the game
@@ -382,8 +383,14 @@ $(document).ready (function() {
         
         $("#btn-start").addClass("d-none");             // hide the start button
         game.start();                                   // start the game
-        game.htmlShowQuestion();                            // show question
+        game.htmlShowQuestion();                        // show question
 
+        // set the time allowed 
+        game.timeleft = RESPONSE_TIME_LIMIT/1000;
+        $("#remaining-time").text(game.timeleft);        // amount of time given to respond to the question
+        console.log("Time remaining: " + game.timeleft);
+
+        window.userSelectionTimer = window.setInterval(updateRemainingTime, 1000);      // start the timer
     });
 
     ///////////////////////////////////////////
@@ -391,6 +398,10 @@ $(document).ready (function() {
     ///////////////////////////////////////////
     $("#btn-submit").on("click", function() {
         console.log("submit button clicked.");
+        
+        // answer received so stop counting down the remaining time
+        game.answerSubmitted = true;
+        clearInterval(userSelectionTimer);
 
         // capture the user response
         var userAnswer = $("input[type='radio'][name='choice']:checked").val();
@@ -403,38 +414,87 @@ $(document).ready (function() {
         }
 
         console.log("Submitted: " + userAnswer);
-        var result = game.isAnswerCorrect(userAnswer);
-        console.log("Result: " + result);
+        var answerFlag = game.isAnswerCorrect(userAnswer);
+        console.log("Result: " + answerFlag);
 
-        //q.timeElapsed = timeElapsed ? true: false;            TODO
+        // stop the timer
+        //clearTimeout(userSelectionTimer);
 
         /////////////////////////////////////////////// 
         // show the answer
         /////////////////////////////////////////////// 
-        game.htmlShowAnswer(result);
+        game.htmlShowAnswer((answerFlag ? ANSWER_RIGHT_FLAG : ANSWER_WRONG_FLAG));
 
-        /////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////
         // go to next question after a few seconds
-        /////////////////////////////////////////////
-       var answerTimer = setTimeout(function() { 
-            if (game.currentQuestion + 1 < game.questions.length) {
-                console.log("Move to next question.");
-                console.log("current question: "+ game.currentQuestion);
-                console.log("game question length: " + game.questions.length);
-
-                game.htmlClearAnswer();
-                game.nextQuestion();
-                $("#message-p").addClass("d-none");               // hide the answer
-                $("#btn-submit").removeClass("d-none");           // show the submit button
-
-                game.htmlShowQuestion();
-            } else {
-                clearTimeout(answerTimer);
-                game.gameOver();
-            }
-        }, 3000);
-
-
+        /////////////////////////////////////////////////////////////////
+        window.answerTimer = window.setTimeout(answerPreviewCallback, ANSWER_PREVIEW_TIME);
     });
 
+
+    function updateRemainingTime() {
+        var timeOver = false;
+
+        // countdown
+        game.timeleft--;
+        $("#remaining-time").text(game.timeleft);
+
+        // user has run out of time
+        if (game.timeleft <=0 && !game.answerSubmitted) {
+            timeOver = true;
+
+            clearInterval(userSelectionTimer);
+            console.log("Out of Time!!!");
+
+            /////////////////////////////////////////////// 
+            // show the answer
+            /////////////////////////////////////////////// 
+            game.htmlShowAnswer(TIME_EXPIRED_FLAG);
+
+            /////////////////////////////////////////////////////////////////
+            // go to next question after a few seconds
+            /////////////////////////////////////////////////////////////////
+            window.answerTimer = window.setTimeout(answerPreviewCallback, ANSWER_PREVIEW_TIME);
+
+        };
+        
+        return timeOver;
+    };
+
+    function answerPreviewCallback() {
+              
+        clearTimeout(answerTimer);
+
+        game.htmlClearAnswer();
+        game.nextQuestion();
+        console.log("Move to next question (game).");
+
+        if (game.currentQuestion < game.questions.length) {
+            console.log("current question: "+ game.currentQuestion);
+            console.log(game.questions[game.currentQuestion]);
+            console.log("game question length: " + game.questions.length);
+
+            $("#message-p").addClass("d-none");               // hide the answer
+            $("#btn-submit").removeClass("d-none");           // show the submit button
+
+            game.htmlShowQuestion();
+
+            /////////////////////////////////////////
+            // reset user response timer
+            /////////////////////////////////////////
+            window.clearInterval(window.userSelectionTimer);
+
+            // set the time allowed 
+            game.timeleft = RESPONSE_TIME_LIMIT/1000;
+            $("#remaining-time").text(game.timeleft);        // amount of time given to respond to the question
+            console.log("Time remaining: " + game.timeleft);
+
+            window.userSelectionTimer = window.setInterval(updateRemainingTime, 1000);      // start the timer
+        } else {
+            game.gameOver();
+        }
+
+    }
 });
+
+

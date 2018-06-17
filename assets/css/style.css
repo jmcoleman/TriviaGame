@@ -1,0 +1,14 @@
+body {
+    /*background: #000 url("../images/free-digital-wallpaper-1.jpg") center fixed no-repeat; */
+    background: linear-gradient(
+    /*    rgba(255, 0, 0, 0.45), 
+        rgba(255, 0, 0, 0.45) */
+        rgba(0,0,0, 0.1),
+        rgba(0,0,0, 0.1)
+        ),
+        url("../images/free-digital-wallpaper-1.jpg");
+}
+
+.jumbotron {
+    background: rgba(245, 245, 245, 0.9);
+}
