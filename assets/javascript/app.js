@@ -209,7 +209,6 @@ const TIME_EXPIRED_FLAG = 2;    // indicaes time has expired
 var game = {
     questions: [],
     currentQuestion: 0,
-    answeredCorrectly: false,
     answerSubmitted: false,
     timeleft: 0,
     self: {},
@@ -224,8 +223,11 @@ var game = {
         // load up the questions to be used for the game
         for (i=0; i < NUMBER_OF_GAME_QUESTIONS; i++) {
             randomNumber = Math.floor(Math.random() * triviaList.length);            // random number between 0 and 30
-            //console.log(randomNumber);
+
+            // get the question and default the question properties we'll use
             questionObj = triviaList[randomNumber];
+            questionObj.timeExpired = null;
+            questionObj.answeredCorrectly = null;
 
             //console.log(questionObj);
             self.questions.push(questionObj);
@@ -236,7 +238,6 @@ var game = {
     resetGame: function() {
         self.questions = [];
         self.currentQuestion = 0;
-        self.answeredCorrectly = false;
         self.answerSubmitted = false;
         self.timeleft = 0;
     },
@@ -302,7 +303,38 @@ var game = {
 
     gameOver: function() {
         alert("Game Over");         // TODO give results on page
+
+        var nbrCorrect = 0;
+        var nbrIncorrect = 0;
+        var nbrTimeExpired = 0;
+
+        console.log("Self-->");
+        console.log(self.questions.length);
+        console.log("Game-->");
+        console.log(game.questions.length);
+
         // show new content on page with stats
+        self.questions.forEach(element => {
+            console.log(element);
+
+            // if time expired, increment time expire counter
+            if (!isEmpty(element.timeExpired) && element.timeExpired) {
+                nbrTimeExpired++;
+            } else {
+                // otherwise check if answer is correct and increment counters 
+                if (!isEmpty(element.answeredCorrectly)) {
+                    if (element.answeredCorrectly) {
+                        nbrCorrect++
+                    } else {
+                        nbrIncorrect++; 
+                    }
+                };
+            };
+        });
+
+        console.log("Correct: " + nbrCorrect);
+        console.log("Incorrect: " + nbrIncorrect);
+        console.log("Timed Out: " + nbrTimeExpired);
     },
 
     htmlShowAnswer: function(answerState) {
@@ -374,6 +406,13 @@ var userSelectionTimer;
 var answerTimer;
 
 ///////////////////////////////////////////
+// JavaScript
+///////////////////////////////////////////
+function isEmpty(val) {
+    return (val === undefined || val == null || val.length <= 0) ? true : false;
+};
+
+///////////////////////////////////////////
 // JQuery
 ///////////////////////////////////////////
 $(document).ready (function() {
@@ -386,6 +425,7 @@ $(document).ready (function() {
         console.log("start button clicked.");
         
         $("#btn-start").addClass("d-none");             // hide the start button
+
         game.start();                                   // start the game
         game.htmlShowQuestion();                        // show question
 
@@ -465,6 +505,7 @@ $(document).ready (function() {
 
             clearInterval(userSelectionTimer);
             console.log("Out of Time!!!");
+            game.questions[game.currentQuestion].timeExpired = timeOver;
 
             /////////////////////////////////////////////// 
             // show the answer
@@ -478,7 +519,6 @@ $(document).ready (function() {
 
         };
         
-        return timeOver;
     };
 
     function answerPreviewCallback() {
@@ -512,6 +552,22 @@ $(document).ready (function() {
             window.userSelectionTimer = window.setInterval(updateRemainingTime, 1000);      // start the timer
         } else {
             game.gameOver();
+
+            game.resetGame();                               // reset the game variables
+
+            ///////////////////////////////
+            // start the game again
+            ///////////////////////////////
+            game.start();                                   // start the game
+            $("#btn-submit").removeClass("d-none");           // show the submit button
+            game.htmlShowQuestion();                        // show question
+    
+            // set the time allowed 
+            game.timeleft = RESPONSE_TIME_LIMIT/1000;
+            $("#remaining-time").text(game.timeleft);        // max response time to answser
+            console.log("Time remaining: " + game.timeleft);
+    
+            window.userSelectionTimer = window.setInterval(updateRemainingTime, 1000);  // start timer
         }
 
     }
