@@ -6,9 +6,17 @@ body {
         rgba(0,0,0, 0.1),
         rgba(0,0,0, 0.1)
         ),
-        url("../images/free-digital-wallpaper-1.jpg");
+        url("../images/free-digital-wallpaper-1.jpg") no-repeat fixed center;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
 }
 
+/*
 .jumbotron {
-    background: rgba(245, 245, 245, 0.9);
+    //background: rgba(245, 245, 245, 0.9); 
+    background: rgba(189,239,239, .9);
+
 }
+*/

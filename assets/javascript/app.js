@@ -197,8 +197,8 @@ var triviaList = [
 //     });
 // }
 
-const NUMBER_OF_GAME_QUESTIONS = 5;                // Number of questions to ask in a game.
-const RESPONSE_TIME_LIMIT = 30000;      // Max ime allowed to answer a question.  (expressed in milliseconds... equates to 120 seconds)
+const NUMBER_OF_GAME_QUESTIONS = 5;     // Number of questions to ask in a game.
+const RESPONSE_TIME_LIMIT = 30000;      // Max time for response (expressed in milliseconds)
 const ANSWER_PREVIEW_TIME = 5000;       // Time of interval to show the answer
 
 const ANSWER_WRONG_FLAG = 0;    // answer is wrong state value
@@ -220,7 +220,7 @@ var game = {
         var questionObj = {};
 
         self = this;
-        
+
         // load up the questions to be used for the game
         for (i=0; i < NUMBER_OF_GAME_QUESTIONS; i++) {
             randomNumber = Math.floor(Math.random() * triviaList.length);            // random number between 0 and 30
@@ -267,11 +267,11 @@ var game = {
         ////////////////////////////////////////////
         // set the question data in the card
         ////////////////////////////////////////////
-        $("#question-nbr").text(game.currentQuestion + 1);          // show which question we are on
-        $("#question-ttl").text(NUMBER_OF_GAME_QUESTIONS);                     // show the total number of questions
+        $("#question-nbr").text(game.currentQuestion + 1);      // show which question we are on
+        $("#question-ttl").text(NUMBER_OF_GAME_QUESTIONS);      // show the total number of questions
     
         var q = self.getQuestion();
-        $("#question").text(q.question);                            // show the question
+        $("#question").text(q.question);                        // show the question
     
         /////////////////////////////////////////////////////
         // loop thru the choices and add the html for each
@@ -279,7 +279,7 @@ var game = {
         var choicesDiv = $("#choices");
         var j = 0;
     
-        choicesDiv.html("");                                        // clear out the test data on the html page
+        choicesDiv.html("");                   // clear out the test data on the html page
     
         q.choices.forEach(function(choice) {
             choicesDiv.append(`<div id='RadioDiv${j}' class="form-radio form-radio-inline"></div>`);
@@ -387,10 +387,10 @@ $(document).ready (function() {
 
         // set the time allowed 
         game.timeleft = RESPONSE_TIME_LIMIT/1000;
-        $("#remaining-time").text(game.timeleft);        // amount of time given to respond to the question
+        $("#remaining-time").text(game.timeleft);        // max response time to answser
         console.log("Time remaining: " + game.timeleft);
 
-        window.userSelectionTimer = window.setInterval(updateRemainingTime, 1000);      // start the timer
+        window.userSelectionTimer = window.setInterval(updateRemainingTime, 1000);  // start timer
     });
 
     ///////////////////////////////////////////
@@ -408,17 +408,33 @@ $(document).ready (function() {
         
         // check that the user provided an answer
         if (!userAnswer) {
-            $("#message").text("You must choose a response before submitting!");            // populate the answer
-            $("#message-p").removeClass("d-none");                                          // show the answer
+            var makeSelectionText = "You must choose a response before submitting!";
+
+            /////////////////////////////
+            // populate the answer
+            ///////////////////////////// 
+
+            // clear any previous messages
+            game.htmlClearAnswer();
+
+            // add DOM element for user feedback
+            var spanUserMsg = $("<span>");     
+            spanUserMsg.attr("id","message");
+            spanUserMsg.addClass("my-2");
+            spanUserMsg.text(makeSelectionText);
+    
+            var e = $("#message-p");           // find where we add it
+            e.append(spanUserMsg);             // add the message
+
+            // show the answer
+            $("#message-p").removeClass("d-none");
+
             return;
         }
 
         console.log("Submitted: " + userAnswer);
         var answerFlag = game.isAnswerCorrect(userAnswer);
         console.log("Result: " + answerFlag);
-
-        // stop the timer
-        //clearTimeout(userSelectionTimer);
 
         /////////////////////////////////////////////// 
         // show the answer
