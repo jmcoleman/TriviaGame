@@ -240,6 +240,8 @@ var game = {
         self.currentQuestion = 0;
         self.answerSubmitted = false;
         self.timeleft = 0;
+
+        self.htmlClearGameResults();
     },
 
     nextQuestion: function() {
@@ -277,18 +279,29 @@ var game = {
         /////////////////////////////////////////////////////
         // loop thru the choices and add the html for each
         /////////////////////////////////////////////////////
+        $("#choices").empty();                                  // clear out the test data on the html page
+
         var choicesDiv = $("#choices");
         var j = 0;
     
-        choicesDiv.html("");                   // clear out the test data on the html page
-    
         q.choices.forEach(function(choice) {
-            choicesDiv.append(`<div id='RadioDiv${j}' class="form-radio form-radio-inline"></div>`);
-    
-            var newRadioDiv = $(`div[id='RadioDiv${j}`);
-            newRadioDiv.append(`<input class='form-radio-input' type='radio' id='Radio${j}' name='choice' value='${q.choices[j]}'>`);
-            newRadioDiv.append(`<label class='form-radio-label' for='inlineRadio${j}'>${q.choices[j]}</label>`);
-    
+            var itemChoice = $("<div>");
+            itemChoice.attr("id",`RadioDiv${j}`);
+            itemChoice.addClass("form-radio form-radio-inline");
+
+            var inputItem = $("<input>");
+            inputItem.addClass("form-radio-input");
+            inputItem.attr({"type": "radio", "id": `Radio${j}`, "name": "choice", "value": `${q.choices[j]}`});
+
+            var inputLabel = $("<label>");
+            inputLabel.addClass("form-radio-label ml-2");
+            inputLabel.attr({"for": `inlineRadio${j}`});
+            inputLabel.text(`${q.choices[j]}`);
+
+            itemChoice.append(inputItem);
+            itemChoice.append(inputLabel)
+            choicesDiv.append(itemChoice);
+
             j++;
         });
     
@@ -301,17 +314,17 @@ var game = {
         answerMsg.empty(); 
     },
 
-    gameOver: function() {
-        alert("Game Over");         // TODO give results on page
+    htmlClearGameResults: function() {
+        $("#card-results").remove();
+    },
 
+    gameOver: function() {
         var nbrCorrect = 0;
         var nbrIncorrect = 0;
         var nbrTimeExpired = 0;
 
         console.log("Self-->");
         console.log(self.questions.length);
-        console.log("Game-->");
-        console.log(game.questions.length);
 
         // show new content on page with stats
         self.questions.forEach(element => {
@@ -335,6 +348,69 @@ var game = {
         console.log("Correct: " + nbrCorrect);
         console.log("Incorrect: " + nbrIncorrect);
         console.log("Timed Out: " + nbrTimeExpired);
+
+        // call method to give results on page
+        self.htmlShowGameResults(nbrCorrect,nbrIncorrect,nbrTimeExpired);
+    },
+
+    htmlShowGameResults: function(right, wrong, unanswered) {
+        $("#card-question").addClass("d-none");                 // hide the card with the questions
+
+        // show the results
+        var divResults = $("<div>");
+        divResults.attr("id","card-results");
+        divResults.addClass("card border-primary d-none");
+
+        var cardHeader = $("<div>");
+        cardHeader.addClass("card-header bg-primary text-white");
+        cardHeader.text("Game Results");
+
+        var divResultsBody = $("<div>");
+        divResultsBody.addClass("card-body");
+
+        var divResultsTitle =  $("<div>");
+        divResultsTitle.addClass("card-title");
+
+        var resultsHeading = $("<h5>");
+        resultsHeading.addClass("lead text-muted mt-4");
+        resultsHeading.text("Thank you for playing.");
+
+        // construct results data
+        var showCorrect = $("<div>");
+        showCorrect.addClass("card-text my-2 lead text-muted");
+        showCorrect.text("Answered Correctly: " + right);
+
+        var showIncorrect = $("<div>");
+        showIncorrect.addClass("card-text my-2 lead text-muted");
+        showIncorrect.text("Answered Incorrectly: " + wrong);
+
+        var showUnanswered = $("<div>");
+        showUnanswered.addClass("card-text my-2 lead text-muted");
+        showUnanswered.text("Questions Unanswered: " + unanswered);
+        
+        var playAgainButton = $("<button>");
+        playAgainButton.attr("id","btn-play-again");
+        playAgainButton.attr("type","button");
+        playAgainButton.addClass("btn btn-primary btn-lg w-25 mt-4");
+        playAgainButton.text("Play Again");
+
+        divResultsTitle.append(resultsHeading);
+
+        divResultsBody.append(showCorrect);
+        divResultsBody.append(showIncorrect);
+        divResultsBody.append(showUnanswered);
+
+        divResultsBody.append(divResultsTitle);
+
+        divResultsBody.append(playAgainButton);
+        divResults.append(cardHeader);
+        divResults.append(divResultsBody);
+
+        // add to the DOM
+        var insertionPoint = $("#game-heading");
+        insertionPoint.after(divResults);
+
+        $("#card-results").removeClass("d-none");
     },
 
     htmlShowAnswer: function(answerState) {
@@ -489,6 +565,25 @@ $(document).ready (function() {
         window.answerTimer = window.setTimeout(answerPreviewCallback, ANSWER_PREVIEW_TIME);
     });
 
+    // user wants to PLAY AGAIN
+    $("#content-wrapper").delegate("#btn-play-again","click", function() {
+        game.resetGame();                               // reset the game variables
+
+        ///////////////////////////////
+        // start the game again
+        ///////////////////////////////
+        game.start();                                   // start the game
+        $("#btn-submit").removeClass("d-none");         // show the submit button
+        game.htmlShowQuestion();                        // show question
+
+        // set the time allowed 
+        game.timeleft = RESPONSE_TIME_LIMIT/1000;
+        $("#remaining-time").text(game.timeleft);        // max response time to answser
+        console.log("Time remaining: " + game.timeleft);
+
+        window.userSelectionTimer = window.setInterval(updateRemainingTime, 1000);  // start timer
+    });
+
     ///////////////////////////////////////////
     // Functions
     ///////////////////////////////////////////
@@ -552,22 +647,6 @@ $(document).ready (function() {
             window.userSelectionTimer = window.setInterval(updateRemainingTime, 1000);      // start the timer
         } else {
             game.gameOver();
-
-            game.resetGame();                               // reset the game variables
-
-            ///////////////////////////////
-            // start the game again
-            ///////////////////////////////
-            game.start();                                   // start the game
-            $("#btn-submit").removeClass("d-none");           // show the submit button
-            game.htmlShowQuestion();                        // show question
-    
-            // set the time allowed 
-            game.timeleft = RESPONSE_TIME_LIMIT/1000;
-            $("#remaining-time").text(game.timeleft);        // max response time to answser
-            console.log("Time remaining: " + game.timeleft);
-    
-            window.userSelectionTimer = window.setInterval(updateRemainingTime, 1000);  // start timer
         }
 
     }
