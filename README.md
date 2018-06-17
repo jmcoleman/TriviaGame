@@ -44,11 +44,11 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 Trivia sourced from the below sites:
-1. [GitHub](https://analyticsweek.com/content/big-data-facts/)
-1. [GitHub](https://blog.capterra.com/10-surprising-big-data-statistics/)
-1. [GitHub](http://www.businessinsider.com/12-trillion-photos-to-be-taken-in-2017-thanks-to-smartphones-chart-2017-8)
-1. [GitHub](https://www.newgenapps.com/blog/iot-statistics-internet-of-things-future-research-data)
-1. [GitHub](http://www.grabstats.com/stats/2049)
-1. [GitHub](http://www.engineersireland.ie/EngineersIreland/media/SiteMedia/cpd/training/Seminars%20temp/Data%20Centres/1-Ray-Walshe-Datacentre-Growth.pdf)
+1. [Analytics Week](https://analyticsweek.com/content/big-data-facts/)
+1. [Capterra Blog](https://blog.capterra.com/10-surprising-big-data-statistics/)
+1. [Business Insider](http://www.businessinsider.com/12-trillion-photos-to-be-taken-in-2017-thanks-to-smartphones-chart-2017-8)
+1. [NewGen Apps](https://www.newgenapps.com/blog/iot-statistics-internet-of-things-future-research-data)
+1. [Grab Stats](http://www.grabstats.com/stats/2049)
+1. [Engineers Ireland](http://www.engineersireland.ie/EngineersIreland/media/SiteMedia/cpd/training/Seminars%20temp/Data%20Centres/1-Ray-Walshe-Datacentre-Growth.pdf)
 
 
