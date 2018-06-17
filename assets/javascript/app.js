@@ -4,8 +4,8 @@
 var triviaList = [
     {   id: 0, 
         question: "How many hours of new video do YouTube users upload every minute of the day?", 
-        choices: [10, 25, 48, 52, 65], 
-        answer: 48,
+        choices: ["10 hours", "25 hours", "48 hours", "52 hours", "65 hours"], 
+        answer: "48 hours",
         answerMessage: "YouTube users upload 48 hours of new video every minute of the day."
     },
     {   id: 1, 
@@ -203,6 +203,13 @@ const ANSWER_WRONG_FLAG = 0;    // answer is wrong state value
 const ANSWER_RIGHT_FLAG = 1;    // answer is right state value
 const TIME_EXPIRED_FLAG = 2;    // indicaes time has expired
 
+const CHOICES_LAYOUT_HORIZONTAL = 0;
+const CHOICES_LAYOUT_VERTICAL = 1;
+const CHOICES_LAYOUT_VERTICAL_BORDERED = 2;
+const GAME_CHOICES_STYLE = 0;                  
+
+const DISPLAY_VERTICAL_QUESTIONS_ARRAY = [5,10];
+
 ///////////////////////////////////////////
 // Global Object(s)
 ///////////////////////////////////////////
@@ -288,25 +295,101 @@ var game = {
         $("#choices").empty();                                  // clear out the test data on the html page
 
         var choicesDiv = $("#choices");
+        choicesDiv.removeClass();
+
         var j = 0;
+        var choiceStyle = GAME_CHOICES_STYLE;
+
+        if (DISPLAY_VERTICAL_QUESTIONS_ARRAY.indexOf(q.id) !== -1) {
+            choiceStyle = CHOICES_LAYOUT_VERTICAL;
+        }
     
         q.choices.forEach(function(choice) {
-            var itemChoice = $("<div>");
-            itemChoice.attr("id",`RadioDiv${j}`);
-            itemChoice.addClass("form-radio form-radio-inline");
 
-            var inputItem = $("<input>");
-            inputItem.addClass("form-radio-input");
-            inputItem.attr({"type": "radio", "id": `Radio${j}`, "name": "choice", "value": `${q.choices[j]}`});
+            // TODO make this dynamic
+            switch(choiceStyle) {
 
-            var inputLabel = $("<label>");
-            inputLabel.addClass("form-radio-label ml-2");
-            inputLabel.attr({"for": `inlineRadio${j}`});
-            inputLabel.text(`${q.choices[j]}`);
+                case CHOICES_LAYOUT_HORIZONTAL:
+                    // add these backt to the form if displaying horizontally
+                    choicesDiv.addClass("d-flex justify-content-around mb-3 lead");
 
-            itemChoice.append(inputItem);
-            itemChoice.append(inputLabel)
-            choicesDiv.append(itemChoice);
+                    ///////////////////////////////////
+                    // Horizontal selections
+                    ///////////////////////////////////
+                    var itemChoice = $("<div>");
+                    itemChoice.attr("id",`RadioDiv${j}`);
+                    itemChoice.addClass("form-radio form-radio-inline");
+
+                    var inputItem = $("<input>");
+                    inputItem.addClass("form-radio-input");
+                    inputItem.attr({"type": "radio", "id": `Radio${j}`, "name": "choice", "value": `${q.choices[j]}`});
+
+                    var inputLabel = $("<label>");
+                    inputLabel.addClass("form-radio-label ml-2");
+                    inputLabel.attr({"for": `inlineRadio${j}`});
+                    inputLabel.text(`${q.choices[j]}`);
+
+                    itemChoice.append(inputItem);
+                    itemChoice.append(inputLabel)
+                    choicesDiv.append(itemChoice);
+
+                    break;
+
+                case CHOICES_LAYOUT_VERTICAL:
+                    // add these backt to the form if displaying horizontally
+                    choicesDiv.addClass("mb-3 lead");
+
+                    ///////////////////////////////////
+                    // Vertical selections
+                    ///////////////////////////////////
+                    var itemChoice = $("<div>");
+                    itemChoice.attr("id",`RadioDiv${j}`);
+                    itemChoice.addClass("form-radio");
+
+                    var inputItem = $("<input>");
+                    inputItem.addClass("form-radio-input");
+                    inputItem.attr({"type": "radio", "id": `Radio${j}`, "name": "choice", "value": `${q.choices[j]}`});
+
+                    var inputLabel = $("<label>");
+                    inputLabel.addClass("form-radio-label ml-2");
+                    inputLabel.attr({"for": `Radio${j}`});
+                    inputLabel.text(`${q.choices[j]}`);
+
+                    itemChoice.append(inputItem);
+                    itemChoice.append(inputLabel)
+                    choicesDiv.append(itemChoice);
+
+                    break;
+
+                case CHOICES_LAYOUT_VERTICAL_BORDERED:
+                    // add these backt to the form if displaying horizontally
+                    choicesDiv.addClass("list-group mb-3 lead");
+
+                    ///////////////////////////////////
+                    // Vertical Border selections
+                    ///////////////////////////////////
+                    var itemChoice = $("<div>");
+                    itemChoice.attr("id",`RadioDiv${j}`);
+                    itemChoice.addClass("form-radio list-group-item");
+
+                    var inputItem = $("<input>");
+                    inputItem.addClass("form-radio-input");
+                    inputItem.attr({"type": "radio", "id": `Radio${j}`, "name": "choice", "value": `${q.choices[j]}`});
+
+                    var inputLabel = $("<label>");
+                    inputLabel.addClass("form-radio-label ml-2");
+                    inputLabel.attr({"for": `Radio${j}`});
+                    inputLabel.text(`${q.choices[j]}`);
+
+                    itemChoice.append(inputItem);
+                    itemChoice.append(inputLabel)
+                    choicesDiv.append(itemChoice);
+
+                    break;
+
+                default:
+                    console.log("Error: No layout identified for the choices.");
+            };
 
             j++;
         });
