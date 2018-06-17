@@ -1,11 +1,6 @@
-// populate data to work with for the trivia game
-// sources: https://analyticsweek.com/content/big-data-facts/
-//          https://blog.capterra.com/10-surprising-big-data-statistics/
-//          http://www.businessinsider.com/12-trillion-photos-to-be-taken-in-2017-thanks-to-smartphones-chart-2017-8
-//          https://www.newgenapps.com/blog/iot-statistics-internet-of-things-future-research-data
-//          http://www.grabstats.com/stats/2049
-//          http://www.engineersireland.ie/EngineersIreland/media/SiteMedia/cpd/training/Seminars%20temp/Data%20Centres/1-Ray-Walshe-Datacentre-Growth.pdf
-//          Wikibon
+///////////////////////////////////////////
+// Trivia Question Bank
+///////////////////////////////////////////
 var triviaList = [
     {   id: 0, 
         question: "How many hours of new video do YouTube users upload every minute of the day?", 
@@ -197,6 +192,9 @@ var triviaList = [
 //     });
 // }
 
+///////////////////////////////////////////
+// Constants
+///////////////////////////////////////////
 const NUMBER_OF_GAME_QUESTIONS = 5;     // Number of questions to ask in a game.
 const RESPONSE_TIME_LIMIT = 30000;      // Max time for response (expressed in milliseconds)
 const ANSWER_PREVIEW_TIME = 5000;       // Time of interval to show the answer
@@ -205,7 +203,9 @@ const ANSWER_WRONG_FLAG = 0;    // answer is wrong state value
 const ANSWER_RIGHT_FLAG = 1;    // answer is right state value
 const TIME_EXPIRED_FLAG = 2;    // indicaes time has expired
 
-// object literal notation
+///////////////////////////////////////////
+// Global Object(s)
+///////////////////////////////////////////
 var game = {
     questions: [],
     currentQuestion: 0,
@@ -373,11 +373,15 @@ var game = {
 var userSelectionTimer;
 var answerTimer;
 
+///////////////////////////////////////////
+// JQuery
+///////////////////////////////////////////
 $(document).ready (function() {
 
     ///////////////////////////////////////////
-    // user clicks button to START the game
+    // Event Handlers
     ///////////////////////////////////////////
+    // user clicks button to START GAME
     $("#btn-start").on("click", function() {
         console.log("start button clicked.");
         
@@ -393,9 +397,7 @@ $(document).ready (function() {
         window.userSelectionTimer = window.setInterval(updateRemainingTime, 1000);  // start timer
     });
 
-    ///////////////////////////////////////////
-    // user clicks to submit question
-    ///////////////////////////////////////////
+    // user clicks to SUBMIT QUESTION
     $("#btn-submit").on("click", function() {
         console.log("submit button clicked.");
         
@@ -447,7 +449,9 @@ $(document).ready (function() {
         window.answerTimer = window.setTimeout(answerPreviewCallback, ANSWER_PREVIEW_TIME);
     });
 
-
+    ///////////////////////////////////////////
+    // Functions
+    ///////////////////////////////////////////
     function updateRemainingTime() {
         var timeOver = false;
 
@@ -511,6 +515,7 @@ $(document).ready (function() {
         }
 
     }
+
 });
 
 
