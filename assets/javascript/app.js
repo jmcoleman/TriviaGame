@@ -186,11 +186,9 @@ var triviaList = [
 ];
 
 // check the loading of trivia questions
-// for (i=0; i < triviaList.length; i++) {
-//     triviaList.forEach(element => {
-//         console.log(element);
-//     });
-// }
+// triviaList.forEach(element => {
+//     console.log(element);
+// });
 
 ///////////////////////////////////////////
 // Constants
@@ -587,6 +585,9 @@ $(document).ready (function() {
     ///////////////////////////////////////////
     // user clicks button to START GAME
     $("#btn-start").on("click", function() {
+        // prevents the page from reloading and allows enter to submit
+        event.preventDefault();
+
         console.log("start button clicked.");
         
         $("#btn-start").addClass("d-none");             // hide the start button
@@ -604,6 +605,9 @@ $(document).ready (function() {
 
     // user clicks to SUBMIT QUESTION
     $("#btn-submit").on("click", function() {
+        // prevents the page from reloading and allows enter to submit
+        event.preventDefault();
+
         console.log("submit button clicked.");
         
         // answer received so stop counting down the remaining time
@@ -656,6 +660,9 @@ $(document).ready (function() {
 
     // user wants to PLAY AGAIN
     $("#content-wrapper").delegate("#btn-play-again","click", function() {
+        // prevents the page from reloading and allows enter to submit
+        event.preventDefault();
+
         game.resetGame();                               // reset the game variables
 
         ///////////////////////////////
