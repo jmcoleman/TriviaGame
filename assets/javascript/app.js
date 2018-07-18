@@ -88,7 +88,7 @@ var triviaList = [
     },
     {   id: 14, 
         question: "In Aug 2015, how many people used Facebook in a single day?", 
-        choices: ["over 1 million", "over 1 billion", "over 10 billion", "over 100 billion"], 
+        choices: ["over 1 million", "over 1 billion", "over 1.5 billion", "over 3 billion"], 
         answer: "over 1 billion",
         answerMessage: "In Aug 2015, over 1 billion people used Facebook FB +0.44% in a single day."
     },

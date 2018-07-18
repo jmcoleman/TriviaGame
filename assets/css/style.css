@@ -6,7 +6,8 @@ body {
         rgba(0,0,0, 0.1),
         rgba(0,0,0, 0.1)
         ),
-        url("../images/free-digital-wallpaper-1.jpg") no-repeat fixed center;
+        /* url("../images/free-digital-wallpaper-1.jpg") no-repeat fixed center; */
+        url("../images/maxresdefault.jpg") no-repeat fixed center;
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;
