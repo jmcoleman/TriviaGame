@@ -147,7 +147,7 @@ var triviaList = [
         answerMessage: "Most of the consumers (87%) aren’t aware of the meaning of “The Internet of Things.”"
     },
     {   id: 24, 
-        question: "What percentage of growth is expected in the wearable deivce market by 2020?", 
+        question: "What percentage of growth is expected in the wearable device market by 2020?", 
         choices: ["25%", "31%", "41%", "48%"], 
         answer: "31%",
         answerMessage: "The wearable devices market is growing at an exponential rate. In 2016, 28.3 million units of IoT devices made it to the market. According to IDC forecasts, this number will rise to 82.5 million by 2020, showcasing a 31% growth."
